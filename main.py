@@ -6,33 +6,35 @@ def main():
     start_time = time.time()
 
     # define the event order and points for standings table
-    event_order_and_pts = {76703:100,  # Meggen
-                            75982:200,  # Chili Open
-                            79574:200,  # Revolution
-                            79619:100,  # Spring Clang MPO/FPO
-                            79567:100,  # Spring Clang Other
-                            81268:100,  # GPO
-                            81952:100,  # Birdie Fest
-                            80000:200,  # ZDGO
-                            83268:200,  # Eagle Open
-                            83724:100,  # Lila´s
-                            83214:100,  # Winterthur
-                            84636:100,  # Lakeside
-                            82431:250}  # Bern Open
+    event_order_and_pts = {87177:100,  # Chili Open
+                           ##:200,  # Revolution
+                           ##:100,  # Spring Clang MPO/FPO
+                           ##:100,  # Spring Clang Other
+                           ##:100,  # GPO
+                           ##:100,  # Birdie Fest
+                           ##:250,  # Meggen
+                           ##:200,  # ZDGO
+                           ##:100,  # Samnaun
+                           ##:100,  # Lila´s
+                           ##:200,  # Eagle Open
+                           ##:100,  # Lakeside
+                           ##:250   # Bern Open
+                           }  
     
-    populate_db_by_event(76703)                   # Meggen
-    populate_db_by_event(75982)                   # Chili Open
-    populate_db_by_event(79574)                   # Revolution
-    populate_db_by_event(79619)                   # Spring Clang MPO/FPO
-    populate_db_by_event(79567)                   # Spring Clang Other
-    populate_db_by_event(81268)                   # GPO
-    populate_db_by_event(81952)                   # Birdie Fest
-    populate_db_by_event(80000)                   # ZDGO
-    populate_db_by_event(83268)                   # Eagle Open
-    populate_db_by_event(83724)                   # Lila´s
-    populate_db_by_event(83214)                   # Winterthur
-    populate_db_by_event(84636)                   # Lakeside
-    populate_db_by_event(82431)                   # Bern Open
+    # populate the database with the results of the events
+    populate_db_by_event(87177)                   # Chili Open
+    # populate_db_by_event()                   # Revolution
+    # populate_db_by_event()                   # Spring Clang MPO/FPO
+    # populate_db_by_event()                   # Spring Clang Other
+    # populate_db_by_event()                   # GPO
+    # populate_db_by_event()                   # Birdie Fest
+    # populate_db_by_event()                   # Meggen
+    # populate_db_by_event()                   # ZDGO
+    # populate_db_by_event()                   # Eagle Open
+    # populate_db_by_event()                   # Lila´s
+    # populate_db_by_event()                   # Winterthur
+    # populate_db_by_event()                   # Lakeside
+    # populate_db_by_event()                   # Bern Open
 
     add_sda_info()
 
