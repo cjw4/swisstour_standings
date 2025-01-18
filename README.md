@@ -11,6 +11,9 @@ Swisstour Standings is a Python project designed to populate the backend model o
 - **main.py**: File that is executed in order to run everything, including the scraping, calculations and creation of the database standing tables.
 - **swisstour_standings.png**: Visual representation of the database structure.
 
+## Versioning
+There is a branch for the working code used for each year. For example the code used to calculate the 2024 standings is located on a branch which will never be merged to main. Main is reserved for the development of the code for the current year.
+
 ## Installation
 ### Python Version & Dependencies
 If using pyenv, run:
