@@ -213,25 +213,30 @@ def create_points_df(division:str,max_pts_dict:dict):
             list_of_dicts.append(dict_)
     
     def sum_points(row, max_pts_dict:dict):
-        events_100_list = []
-        events_200_list = []
-        events_250_list = []
-        for key, value in max_pts_dict.items():
-            if value == 100:
-                events_100_list.append(key)
-            elif value == 200:
-                events_200_list.append(key)
-            elif value == 250:
-                events_250_list.append(key)
+        # events_100_list = []
+        # events_200_list = []
+        # events_250_list = []
+        # for key, value in max_pts_dict.items():
+        #     if value == 100:
+        #         events_100_list.append(key)
+        #     elif value == 200:
+        #         events_200_list.append(key)
+        #     elif value == 250:
+        #         events_250_list.append(key)
 
-        events_100_pts = row[row.index.isin(events_100_list)].sort_values(ascending=False).iloc[:3].sum()
-        events_100_incl = row[row.index.isin(events_100_list)].sort_values(ascending=False).iloc[:3].index
-        events_200_pts = row[row.index.isin(events_200_list)].sort_values(ascending=False).iloc[:2].sum()
-        events_200_incl = row[row.index.isin(events_200_list)].sort_values(ascending=False).iloc[:2].index
-        events_250_pts = row[row.index.isin(events_250_list)].sort_values(ascending=False).iloc[:1].sum()
-        events_250_incl = row[row.index.isin(events_250_list)].sort_values(ascending=False).iloc[:1].index
-        pts = events_100_pts + events_200_pts + events_250_pts
-        events_incl = events_100_incl.values.tolist() + events_200_incl.values.tolist() + events_250_incl.values.tolist()
+        # events_100_pts = row[row.index.isin(events_100_list)].sort_values(ascending=False).iloc[:3].sum()
+        # events_100_incl = row[row.index.isin(events_100_list)].sort_values(ascending=False).iloc[:3].index
+        # events_200_pts = row[row.index.isin(events_200_list)].sort_values(ascending=False).iloc[:2].sum()
+        # events_200_incl = row[row.index.isin(events_200_list)].sort_values(ascending=False).iloc[:2].index
+        # events_250_pts = row[row.index.isin(events_250_list)].sort_values(ascending=False).iloc[:1].sum()
+        # events_250_incl = row[row.index.isin(events_250_list)].sort_values(ascending=False).iloc[:1].index
+        # pts = events_100_pts + events_200_pts + events_250_pts
+        # events_incl = events_100_incl.values.tolist() + events_200_incl.values.tolist() + events_250_incl.values.tolist()
+
+        # new in 2025 - use top 7 results
+        pts = row[row.index.isin(max_pts_dict)].sort_values(ascending=False).iloc[:7].sum()
+        events_incl = row[row.index.isin(max_pts_dict)].sort_values(ascending=False).iloc[:7].index.values.tolist()
+
         return pts, events_incl
     
     # create a pandas dataframe from the list of dictionaries
@@ -345,7 +350,7 @@ def calculate_swisstour_pts(max_pts_dict:dict):
             event_id = event.event_id
             max_pts = max_pts_dict[event_id]
             # adjust the points based on the max points
-            pts_dict = {k: v*(max_pts/100) for k, v in pts_dict.items()}
+            pts_dict = {k: int(np.ceil(v*(max_pts/100))) for k, v in pts_dict.items()}
 
             # get all tournaments from the database corresponding to the selected event  
             tournaments = session.query(Tournament).filter(Tournament.event_id == event_id).all()
@@ -427,8 +432,10 @@ def create_standings(event_order_and_pts:dict):
             for column_name in column_names:                
                 if (column_name == 'Place'):
                     attributes[column_name] = Column(Integer())
-                else:
+                elif ("indicator" in column_name) or (column_name == "SDA License") or (column_name =="player"):
                     attributes[column_name] = Column(String(100))
+                else:
+                    attributes[column_name] = Column(Integer())
                     
             # Create the class dynamically
             Standing = type(f'Standing_{division}', (Base,), attributes)
