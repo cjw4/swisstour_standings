@@ -51,7 +51,7 @@ class Tournament(Base):
     event_id = Column(Integer(),ForeignKey(Event.event_id,ondelete='CASCADE'),nullable=False)
     tournament_division = Column(String(100))
     tournament_place = Column(Integer())
-    tournament_swisstour_points = Column(Float())
+    tournament_swisstour_points = Column(Integer())
     tournament_rating = Column(Integer())
     tournament_prize = Column(Float())
     tournament_propagator = Column(Boolean())

@@ -146,6 +146,7 @@ def add_non_pdga_player(name:str):
         else:
             print('Player {} is already in the database'.format(name))
 
+# calc_pts depreciated due to other calculation system
 def calc_pts(n:int,k:int,pts_max:int):
     '''
     Function to calculate number of points for place (k) with n players and max number of points.
@@ -332,8 +333,20 @@ def calculate_swisstour_pts(max_pts_dict:dict):
         # get all events from the database
         events = session.query(Event).all()
         for event in events:
+            # create dictionary for assigning points to place
+            pts_dict = {
+                1: 100, 2: 90, 3: 81, 4: 73, 5: 66,
+                6: 60, 7: 55, 8: 50, 9: 46, 10: 42,
+                11: 38, 12: 35, 13: 32, 14: 29, 15: 26,
+                16: 23, 17: 21, 18: 19, 19: 17, 20: 15,
+                21: 13, 22: 11, 23: 10, 24: 9, 25: 8,
+                26: 7, 27: 6, 28: 5,
+            }
             event_id = event.event_id
             max_pts = max_pts_dict[event_id]
+            # adjust the points based on the max points
+            pts_dict = {k: v*(max_pts/100) for k, v in pts_dict.items()}
+
             # get all tournaments from the database corresponding to the selected event  
             tournaments = session.query(Tournament).filter(Tournament.event_id == event_id).all()
     
@@ -344,9 +357,12 @@ def calculate_swisstour_pts(max_pts_dict:dict):
                 tournaments = session.query(Tournament).filter(and_(Tournament.event_id == event_id,Tournament.tournament_division == division)).all()
                 n = len(tournaments)
                 for tournament in tournaments:
-                    pts = calc_pts(n,tournament.tournament_place,max_pts)
-                    if tournament.tournament_score != 999:
-                        tournament.tournament_swisstour_points = float(pts)
+                    if tournament.tournament_place in pts_dict:
+                        pts = pts_dict[tournament.tournament_place]
+                    else:
+                        pts = min(list(pts_dict.values()))
+                    if tournament.tournament_score != 999 or tournament.tournament_score != 888:
+                        tournament.tournament_swisstour_points = int(pts)
                     else:
                         tournament.tournament_swisstour_points = 0 # do not give points to DNF tournaments  
                     # write the points to the database
@@ -389,7 +405,7 @@ def create_standings(event_order_and_pts:dict):
             points_df = points_df.replace({pd.NA: None, np.nan: None})
 
             # Round the points to 1 decimal place
-            points_df = points_df.round(1)
+            # points_df = points_df.round(1)
 
             # Drop the standings table if it exists
             metadata = MetaData()
