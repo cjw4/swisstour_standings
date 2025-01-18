@@ -37,6 +37,3 @@ In order to interact with the production database an environment file (.env) in 
 - DB_PASSWORD
 - DB_HOST
 - DB_NAME
-
-## Contact
-For any questions or suggestions, please contact walker.christopher@pm.me.
