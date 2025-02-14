@@ -7,7 +7,7 @@ def main():
 
     # define the event order and points for standings table
     event_order_and_pts = {87177:100,  # Chili Open
-                           ##:200,  # Revolution
+                           89585:200,  # Revolution
                            ##:100,  # Spring Clang MPO/FPO
                            ##:100,  # Spring Clang Other
                            ##:100,  # GPO
@@ -15,7 +15,7 @@ def main():
                            ##:250,  # Meggen
                            ##:200,  # ZDGO
                            ##:100,  # Samnaun
-                           ##:100,  # Lila´s
+                           ##:100,  # Lila's
                            ##:200,  # Eagle Open
                            ##:100,  # Lakeside
                            ##:250   # Bern Open
@@ -23,16 +23,16 @@ def main():
     
     # populate the database with the results of the events
     populate_db_by_event(87177)                   # Chili Open
-    # populate_db_by_event()                   # Revolution
+    populate_db_by_event(89585)                   # Revolution
     # populate_db_by_event()                   # Spring Clang MPO/FPO
     # populate_db_by_event()                   # Spring Clang Other
     # populate_db_by_event()                   # GPO
     # populate_db_by_event()                   # Birdie Fest
     # populate_db_by_event()                   # Meggen
     # populate_db_by_event()                   # ZDGO
+    # populate_db_by_event()                   # Samnaun
+    # populate_db_by_event()                   # Lila's
     # populate_db_by_event()                   # Eagle Open
-    # populate_db_by_event()                   # Lila´s
-    # populate_db_by_event()                   # Winterthur
     # populate_db_by_event()                   # Lakeside
     # populate_db_by_event()                   # Bern Open
 
