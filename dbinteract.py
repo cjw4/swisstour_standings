@@ -316,10 +316,10 @@ def add_sda_info():
                 session.commit()
                 continue
             try:
-                if sda_player.CH_Lizenz.values[0].lower() == 'ja':
-                    tour_license = True
-                else:
+                if sda_player.SDA.empty:
                     tour_license = False
+                else:
+                    tour_license = True
             except:
                 tour_license = False
             player.player_sda_id = sda_player['SDA'].values[0]
