@@ -6,10 +6,10 @@ def main():
     start_time = time.time()
 
     # define the event order and points for standings table
-    event_order_and_pts = {87177:100,  # Chili Open
-                           89585:200,  # Revolution
-                           ##:100,  # Spring Clang MPO/FPO
-                           ##:100,  # Spring Clang Other
+    event_order_and_pts = {#87177:100,  # Chili Open
+                           #89585:200,  # Revolution
+                           #90064:100,  # Spring Clang MPO/FPO
+                           #90024:100,  # Spring Clang Other
                            ##:100,  # GPO
                            ##:100,  # Birdie Fest
                            ##:250,  # Meggen
@@ -22,10 +22,10 @@ def main():
                            }  
     
     # populate the database with the results of the events
-    populate_db_by_event(87177)                   # Chili Open
-    populate_db_by_event(89585)                   # Revolution
-    # populate_db_by_event()                   # Spring Clang MPO/FPO
-    # populate_db_by_event()                   # Spring Clang Other
+    # populate_db_by_event(87177)                   # Chili Open
+    # populate_db_by_event(89585)                   # Revolution
+    # populate_db_by_event(90064)                   # Spring Clang MPO/FPO
+    # populate_db_by_event(90024)                   # Spring Clang Other
     # populate_db_by_event()                   # GPO
     # populate_db_by_event()                   # Birdie Fest
     # populate_db_by_event()                   # Meggen
