@@ -361,12 +361,24 @@ def calculate_swisstour_pts(max_pts_dict:dict):
                 # get all the tournaments filtered by event_id and division
                 tournaments = session.query(Tournament).filter(and_(Tournament.event_id == event_id,Tournament.tournament_division == division)).all()
                 n = len(tournaments)
+                tournament_places = [tournament.tournament_place for tournament in tournaments]
                 for tournament in tournaments:
+                    # check if there are ties and divide points evenly
+                    ties = len([place for place in tournament_places if place == tournament.tournament_place])
                     if tournament.tournament_place in pts_dict:
-                        pts = pts_dict[tournament.tournament_place]
+                        if ties == 1:
+                            pts = pts_dict[tournament.tournament_place]
+                        else:
+                            total_pts = 0
+                            for t in np.arange(ties):
+                                try:
+                                    total_pts += pts_dict[tournament.tournament_place + t]
+                                except:
+                                    total_pts += min(list(pts_dict.values()))
+                            pts = total_pts/ties
                     else:
                         pts = min(list(pts_dict.values()))
-                    if tournament.tournament_score != 999 or tournament.tournament_score != 888:
+                    if tournament.tournament_score != 999 and tournament.tournament_score != 888:
                         tournament.tournament_swisstour_points = int(pts)
                     else:
                         tournament.tournament_swisstour_points = 0 # do not give points to DNF tournaments  
@@ -410,7 +422,7 @@ def create_standings(event_order_and_pts:dict):
             points_df = points_df.replace({pd.NA: None, np.nan: None})
 
             # Round the points to 1 decimal place
-            # points_df = points_df.round(1)
+            points_df = points_df.round(0)
 
             # Drop the standings table if it exists
             metadata = MetaData()
@@ -435,7 +447,7 @@ def create_standings(event_order_and_pts:dict):
                 elif ("indicator" in column_name) or (column_name == "SDA License") or (column_name =="player"):
                     attributes[column_name] = Column(String(100))
                 else:
-                    attributes[column_name] = Column(Integer())
+                    attributes[column_name] = Column(String(100))
                     
             # Create the class dynamically
             Standing = type(f'Standing_{division}', (Base,), attributes)
