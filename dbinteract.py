@@ -192,6 +192,9 @@ def create_points_df(division:str,max_pts_dict:dict):
     events = session.query(Event).join(Tournament, Event.event_id == Tournament.event_id).filter(Tournament.tournament_division == division).all()
     event_info = [(event.event_id,event.event_name) for event in events]
     event_info_dict = dict(event_info)
+    # replace the event names with shortened names
+    for e in event_info_dict:
+        event_info_dict[e] = max_pts_dict[e][1]
 
     session.close()
 
@@ -348,7 +351,7 @@ def calculate_swisstour_pts(max_pts_dict:dict):
                 26: 7, 27: 6, 28: 5,
             }
             event_id = event.event_id
-            max_pts = max_pts_dict[event_id]
+            max_pts = max_pts_dict[event_id][0]
             # adjust the points based on the max points
             pts_dict = {k: int(np.ceil(v*(max_pts/100))) for k, v in pts_dict.items()}
 
@@ -408,6 +411,8 @@ def create_standings(event_order_and_pts:dict):
             
             # Create a mapping dictionary
             event_mapping = {event_id: event_name for event_id, event_name in event_info}
+            for e in event_mapping:
+                event_mapping[e] = event_order_and_pts[e][1]
                         
             # Reorder the event_ids based on event_order
             ordered_event_names = [event_mapping[event_id] for event_id in event_order if event_id in event_mapping]

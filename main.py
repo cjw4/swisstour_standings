@@ -6,14 +6,14 @@ def main():
     start_time = time.time()
 
     # define the event order and points for standings table
-    event_order_and_pts = {#87177:100,  # Chili Open
-                           #89585:200,  # Revolution
-                           #90064:100,  # Spring Clang MPO/FPO
-                           #90024:100,  # Spring Clang Other
-                           ##:100,  # GPO
-                           ##:100,  # Birdie Fest
-                           ##:250,  # Meggen
-                           ##:200,  # ZDGO
+    event_order_and_pts = {87177:[100,"Chili Open"],  # Chili Open
+                           89585:[200, "Revolution"],  # Revolution
+                           #90064:[100, "Spring Clang]",  # Spring Clang MPO/FPO
+                           #90024:[100, "Spring Clang]"  # Spring Clang Other
+                           #91659:[100, "GPO]",  # GPO
+                           #91840:[100, "Birde Fest"],  # Birdie Fest
+                           #92323:[200, "ZDGO"],  # ZDGO
+                           #92343:[250, "Meggen (Swiss Championships)",  # Meggen
                            ##:100,  # Samnaun
                            ##:100,  # Lila's
                            ##:200,  # Eagle Open
@@ -26,10 +26,10 @@ def main():
     # populate_db_by_event(89585)                   # Revolution
     # populate_db_by_event(90064)                   # Spring Clang MPO/FPO
     # populate_db_by_event(90024)                   # Spring Clang Other
-    # populate_db_by_event()                   # GPO
-    # populate_db_by_event()                   # Birdie Fest
-    # populate_db_by_event()                   # Meggen
-    # populate_db_by_event()                   # ZDGO
+    # populate_db_by_event(91659)                   # GPO
+    # populate_db_by_event(91840)                   # Birdie Fest
+    # populate_db_by_event(92323)                   # ZDGO
+    # populate_db_by_event(92343)                   # Meggen
     # populate_db_by_event()                   # Samnaun
     # populate_db_by_event()                   # Lila's
     # populate_db_by_event()                   # Eagle Open
