@@ -8,17 +8,17 @@ def main():
     # define the event order and points for standings table
     event_order_and_pts = {87177:[100,"Chili Open"],  # Chili Open
                            89585:[200, "Revolution"],  # Revolution
-                           #90064:[100, "Spring Clang]",  # Spring Clang MPO/FPO
-                           #90024:[100, "Spring Clang]"  # Spring Clang Other
-                           #91659:[100, "GPO]",  # GPO
-                           #91840:[100, "Birde Fest"],  # Birdie Fest
-                           #92323:[200, "ZDGO"],  # ZDGO
-                           #92343:[250, "Meggen (Swiss Championships)",  # Meggen
-                           ##:100,  # Samnaun
-                           ##:100,  # Lila's
-                           ##:200,  # Eagle Open
-                           ##:100,  # Lakeside
-                           ##:250   # Bern Open
+                           90064:[100, "Spring Clang"],  # Spring Clang MPO/FPO
+                           90024:[100, "Spring Clang"],  # Spring Clang Other
+                           91659:[100, "GPO"],  # GPO
+                           91840:[100, "Birdie Fest"],  # Birdie Fest
+                           92323:[200, "ZDGO"],  # ZDGO
+                           92343:[250, "Meggen (Swiss Championships)"],  # Meggen
+                           93590:[100, "Samnaun"],  # Samnaun
+                           94300:[100, "Lila's Open"]  # Lila's
+                           #94089:[200, "Eagle Open"],  # Eagle Open
+                           ##:[100,"Lakeside Open"],  # Lakeside
+                           ##:[250,"Bern Open"]   # Bern Open
                            }  
     
     # populate the database with the results of the events
@@ -30,9 +30,9 @@ def main():
     # populate_db_by_event(91840)                   # Birdie Fest
     # populate_db_by_event(92323)                   # ZDGO
     # populate_db_by_event(92343)                   # Meggen
-    # populate_db_by_event()                   # Samnaun
-    # populate_db_by_event()                   # Lila's
-    # populate_db_by_event()                   # Eagle Open
+    populate_db_by_event(93590)                   # Samnaun
+    populate_db_by_event(94300)                   # Lila's
+    # populate_db_by_event(94089)                   # Eagle Open
     # populate_db_by_event()                   # Lakeside
     # populate_db_by_event()                   # Bern Open
 

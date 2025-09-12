@@ -5,7 +5,7 @@ import os
 
 load_dotenv()
 
-database = 'hoststar'
+database = 'mysql-local'
 
 if database == 'mysql-local':
     prefix = 'mysql+mysqlconnector'

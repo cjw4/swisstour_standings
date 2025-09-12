@@ -244,21 +244,24 @@ def create_points_df(division:str,max_pts_dict:dict):
     
     # create a pandas dataframe from the list of dictionaries
     df = pd.DataFrame(list_of_dicts)
-    df[['Total', 'events_incl']] = df.apply(lambda row : pd.Series(sum_points(row, max_pts_dict)), axis=1)
+    if not df.empty:
+        df[['Total', 'events_incl']] = df.apply(lambda row : pd.Series(sum_points(row, max_pts_dict)), axis=1)
 
-    # create indicator columns
-    events = [event.event_id for event in events]
-    for event in events:
-        df[f'{event}_indicator'] = df.apply(lambda row : event in row['events_incl'], axis=1)
+        # create indicator columns
+        events = [event.event_id for event in events]
+        for event in events:
+            df[f'{event}_indicator'] = df.apply(lambda row : event in row['events_incl'], axis=1)
 
-    df.rename(columns={**event_info_dict, **{f'{event}_indicator': f'{event_info_dict[event]}_indicator' for event in events}}, inplace=True)
-    df.drop(columns=['events_incl'], inplace=True)
-    
-    df['Place'] = df['Total'].rank(ascending=False,method='min').astype(int)
-    df = df.sort_values(by='Place',ascending=True)
-    cols = ['Place']  + [col for col in df if col != 'Place']
-    df = df[cols]
-    return df
+        df.rename(columns={**event_info_dict, **{f'{event}_indicator': f'{event_info_dict[event]}_indicator' for event in events}}, inplace=True)
+        df.drop(columns=['events_incl'], inplace=True)
+        
+        df['Place'] = df['Total'].rank(ascending=False,method='min').astype(int)
+        df = df.sort_values(by='Place',ascending=True)
+        cols = ['Place']  + [col for col in df if col != 'Place']
+        df = df[cols]
+        return df
+    else:
+        return pd.DataFrame()
 
 # functions
 def populate_db_by_event(event_id:int):
@@ -266,14 +269,15 @@ def populate_db_by_event(event_id:int):
     Populate the database with the event, player, and tournament information for a given event.
     """
     _, tournament_df = add_event(event_id)
-
-    for _,tournament in tournament_df.iterrows():
-        if tournament['pdga_number'] != 0:
-            add_player(tournament.pdga_number)
-            add_tournament(event_id,tournament.pdga_number,tournament_df)
-        else:
-            add_non_pdga_player(tournament['name'])
-            add_tournament(event_id,tournament.pdga_number,tournament_df,player_name=tournament['name'])
+    
+    if tournament_df:
+        for _,tournament in tournament_df.iterrows():
+            if tournament['pdga_number'] != 0:
+                add_player(tournament.pdga_number)
+                add_tournament(event_id,tournament.pdga_number,tournament_df)
+            else:
+                add_non_pdga_player(tournament['name'])
+                add_tournament(event_id,tournament.pdga_number,tournament_df,player_name=tournament['name'])
 
 def add_sda_info():
     """
@@ -417,58 +421,60 @@ def create_standings(event_order_and_pts:dict):
             # Reorder the event_ids based on event_order
             ordered_event_names = [event_mapping[event_id] for event_id in event_order if event_id in event_mapping]
 
+            print(f"Create standings table for {division}")
             points_df = create_points_df(division, event_order_and_pts)
-            # Reorder the columns of points_df based on ordered_event_names
-            additional_columns = [col for col in points_df.columns if col not in ordered_event_names]
-            points_df = points_df[additional_columns + ordered_event_names]
-            points_df.rename(columns={'sda_license': 'SDA License'}, inplace=True)
-            
-            # Replace NaN with None
-            points_df = points_df.replace({pd.NA: None, np.nan: None})
-
-            # Round the points to 1 decimal place
-            points_df = points_df.round(0)
-
-            # Drop the standings table if it exists
-            metadata = MetaData()
-            metadata.reflect(bind=engine)
-            if f'standings_{division}' in metadata.tables:
-                rankings_table = Table(f'standings_{division}', metadata, autoload_with=engine)
-                rankings_table.drop(engine)
-            
-            # Create the standings table dynamically
-            Base = declarative_base()
-            
-            # Create the standings table
-            attributes = {
-                '__tablename__': f'standings_{division}',
-                'standing_id': Column(Integer(), primary_key=True)       
-            }
+            if not points_df.empty:
+                # Reorder the columns of points_df based on ordered_event_names
+                additional_columns = [col for col in points_df.columns if col not in ordered_event_names]
+                points_df = points_df[additional_columns + ordered_event_names]
+                points_df.rename(columns={'sda_license': 'SDA License'}, inplace=True)
                 
-            column_names = points_df.columns
-            for column_name in column_names:                
-                if (column_name == 'Place'):
-                    attributes[column_name] = Column(Integer())
-                elif ("indicator" in column_name) or (column_name == "SDA License") or (column_name =="player"):
-                    attributes[column_name] = Column(String(100))
-                else:
-                    attributes[column_name] = Column(String(100))
+                # Replace NaN with None
+                points_df = points_df.replace({pd.NA: None, np.nan: None})
+
+                # Round the points to 1 decimal place
+                points_df = points_df.round(0)
+
+                # Drop the standings table if it exists
+                metadata = MetaData()
+                metadata.reflect(bind=engine)
+                if f'standings_{division}' in metadata.tables:
+                    rankings_table = Table(f'standings_{division}', metadata, autoload_with=engine)
+                    rankings_table.drop(engine)
+                
+                # Create the standings table dynamically
+                Base = declarative_base()
+                
+                # Create the standings table
+                attributes = {
+                    '__tablename__': f'standings_{division}',
+                    'standing_id': Column(Integer(), primary_key=True)       
+                }
                     
-            # Create the class dynamically
-            Standing = type(f'Standing_{division}', (Base,), attributes)
-            
-            # Create the table in the database
-            Base.metadata.create_all(engine)
-
-            # Populate the standings table
-            for row in points_df.iterrows():
-                row_dict = row[1].to_dict()
-
-                # Change values to "DNF" if their value is 0 and the column name contains "indicator"
-                for key, value in row_dict.items():
-                    if (value == 0) and ('indicator' not in key):
-                        row_dict[key] = "DNF"
+                column_names = points_df.columns
+                for column_name in column_names:                
+                    if (column_name == 'Place'):
+                        attributes[column_name] = Column(Integer())
+                    elif ("indicator" in column_name) or (column_name == "SDA License") or (column_name =="player"):
+                        attributes[column_name] = Column(String(100))
+                    else:
+                        attributes[column_name] = Column(String(100))
                         
-                points = Standing(**row_dict)
-                session.add(points)
-            session.commit()
+                # Create the class dynamically
+                Standing = type(f'Standing_{division}', (Base,), attributes)
+                
+                # Create the table in the database
+                Base.metadata.create_all(engine)
+
+                # Populate the standings table
+                for row in points_df.iterrows():
+                    row_dict = row[1].to_dict()
+
+                    # Change values to "DNF" if their value is 0 and the column name contains "indicator"
+                    for key, value in row_dict.items():
+                        if (value == 0) and ('indicator' not in key):
+                            row_dict[key] = "DNF"
+                            
+                    points = Standing(**row_dict)
+                    session.add(points)
+                session.commit()
