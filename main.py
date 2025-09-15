@@ -15,10 +15,10 @@ def main():
                            92323:[200, "ZDGO"],  # ZDGO
                            92343:[250, "Meggen (Swiss Championships)"],  # Meggen
                            93590:[100, "Samnaun"],  # Samnaun
-                           94300:[100, "Lila's Open"]  # Lila's
-                           #94089:[200, "Eagle Open"],  # Eagle Open
-                           ##:[100,"Lakeside Open"],  # Lakeside
-                           ##:[250,"Bern Open"]   # Bern Open
+                           94300:[100, "Lila's Open"],  # Lila's
+                           94089:[200, "Eagle Open"],  # Eagle Open
+                           ##95048:[100,"Lakeside Open"],  # Lakeside
+                           ##95510:[250,"Bern Open"]   # Bern Open
                            }  
     
     # populate the database with the results of the events
@@ -32,9 +32,9 @@ def main():
     # populate_db_by_event(92343)                   # Meggen
     populate_db_by_event(93590)                   # Samnaun
     populate_db_by_event(94300)                   # Lila's
-    # populate_db_by_event(94089)                   # Eagle Open
-    # populate_db_by_event()                   # Lakeside
-    # populate_db_by_event()                   # Bern Open
+    populate_db_by_event(94089)                   # Eagle Open
+    # populate_db_by_event(95048)                   # Lakeside
+    # populate_db_by_event(95510)                   # Bern Open
 
     add_sda_info()
 

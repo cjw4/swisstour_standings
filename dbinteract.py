@@ -270,7 +270,7 @@ def populate_db_by_event(event_id:int):
     """
     _, tournament_df = add_event(event_id)
     
-    if tournament_df:
+    if isinstance(tournament_df, pd.DataFrame):
         for _,tournament in tournament_df.iterrows():
             if tournament['pdga_number'] != 0:
                 add_player(tournament.pdga_number)
